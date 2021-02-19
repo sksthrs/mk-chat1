@@ -83,7 +83,7 @@ export class PaneInput implements Pane {
   }
 
   private configToScreen() {
-    this.input1Vjs.style.fontSize = AppConfig.data.input_font_size + "pt"
+    this.input1Vjs.style.fontSize = AppConfig.data.main_font_size + 'pt'
   }
 
   setPaneToConfig() {
