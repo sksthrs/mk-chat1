@@ -1,0 +1,31 @@
+{
+  "name": "mk-chat1",
+  "version": "1.0.0",
+  "description": "chat with input monitoring",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve",
+    "build": "webpack --mode=development",
+    "build-release": "webpack --mode=production"
+  },
+  "keywords": [
+    "chat",
+    "subtitle",
+    "要約筆記",
+    "mekiku"
+  ],
+  "author": "mekiku.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/skyway": "0.0.29",
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.1.2",
+    "updates": "^11.4.0",
+    "webpack": "^5.6.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "split.js": "^1.6.2"
+  }
+}

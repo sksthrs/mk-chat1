@@ -1,0 +1,557 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  font-family: sans-serif;
+  font-size: 14pt;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background-color: #303030;
+  overscroll-behavior: none; /* avoid Pull-to-Refresh */
+}
+
+table {
+  border-collapse: collapse;
+}
+
+textarea {
+  outline: 0;
+  resize: none;
+}
+
+label {
+  cursor: pointer;
+}
+
+/* ==================== Generic Classes ==================== */
+
+.titlebar {
+  border-width: 0 1px;
+  border-style: solid;
+  border-color: #c5c5c5;
+  margin: 0;
+  padding: 0;
+  font-size: 10pt;
+  color: black;
+  background-color: #a0a0a0;
+}
+
+/*
+  modal dialogs (dialog element not supported by Safari, disabled by Firefox)
+  https://caniuse.com/dialog
+*/
+.dialog_content {
+  margin: 0;
+  padding: 0.5em;
+  border: 4px solid #ffffff;
+  border-radius: 8px;
+  background-color: #e0e0e0;
+}
+.open {
+  visibility: visible;
+}
+.dialog {
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99990;
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  /*background-color: rgba(64, 64, 64, 0.9);*/
+  background-color: #404040;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.dialog td {
+  padding: 0.2em 0 0.2em 0;
+}
+.dialog input[type="text"]:valid {
+  background-color: white;
+  color: black;
+}
+.dialog input[type="text"]:invalid {
+  background-color: #FFA0A0;
+  color: black;
+}
+
+.wrap {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.w2 { width: 2em; }
+.w3 { width: 3em; }
+.w4 { width: 4em; }
+.w5 { width: 5em; }
+.w6 { width: 6em; }
+.w7 { width: 7em; }
+.w8 { width: 8em; }
+.w16 { width: 16em; }
+
+.inlineButton {
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: #808080;
+}
+
+.shortbutton {
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: #808080;
+  font-family: monospace !important;
+}
+
+.single_column {
+  text-align: center;
+}
+
+.big-font-ui {
+  font-size: 100%;
+}
+
+/* avoid iPhone from zoom-up (16px/12pt or bigger) */
+.big_font {
+  font-size: 14pt;
+}
+
+/* ==================== App-specific Elements ==================== */
+
+#shutter {
+  visibility: initial;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  background-color: #202020;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#shutter_message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#shutter_message_text {
+  color: white;
+}
+
+#shutter_message_image {
+  margin-top: 1em;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.toolbar {
+  border: 1px solid #c5c5c5;
+  padding: 0px 2px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.pane {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: #303030;
+  color: white;
+}
+
+.h_pane {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#pane1 {
+  width: 70%;
+}
+#pane2 {
+  width: 30%;
+}
+
+/* main display and input (input pane shouldn't be resized) */
+#display-input {
+  flex-grow: 1;
+  flex-shrink: 1;
+  height: 65%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* main display */
+#display {
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: black;
+}
+#display .message {
+  padding: 0;
+  margin: 0.3em 0;
+  line-height: 1.25;
+}
+
+/* input */
+#input {
+  padding: 0;
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+.inputArea {
+  margin: 1px;
+  padding-bottom: 0.2em; /* to show underline used by IMEs */
+}
+
+/* monitor */
+div#monitor {
+  flex-grow: 1;
+  flex-shrink: 1;
+  height: 35%;
+  overflow-y: auto; /* appear scroll bar if needed */
+  background-color: black;
+}
+table#monitorTable {
+  width: 100%;
+  table-layout: fixed;
+}
+.monitorColumn1 {
+  width: 20%;
+}
+.monitorColumn2 {
+  width: 80%;
+}
+table#monitorTable td.header {
+  text-align: center;
+}
+table#monitorTable .header-text {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+table#monitorTable td {
+  border: 1px solid #c5c5c5;
+  line-height: 1.2em;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+#monitorFontChecker {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  z-index: -99999;
+}
+#monitorFooter {
+  border: 1px solid #808080;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* app-control */
+#control {
+  flex-grow: 0;
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: stretch;
+  background-color: black;
+}
+
+/* note */
+#note {
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+#note div {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+#note-text {
+  flex-grow: 1;
+  flex-shrink: 1;
+  font-family: inherit;
+  color: white;
+  background-color: black;
+}
+
+/* fkey */
+#fkey {
+  overflow: hidden;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+table#fkey-table {
+  table-layout: fixed;
+  width: 100%;
+}
+.fkey-label {
+  width: 2em;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  line-height: 1.0em;
+  text-align: center;
+}
+.fkey-input {
+  width: 100%;
+  border: 1px solid black;
+  padding: 1px 2px 0.2em 2px; /* bottom for IME-underline */
+}
+td.fkey-text {
+  line-height: 1.0em;
+  padding: 0;
+}
+.fkey-text-readonly {
+  border: 0;
+  padding: 1px 2px 0.2em 2px !important;
+  margin: 0;
+}
+#fkey-table td {
+  white-space: nowrap;
+}
+
+/* notify dialog */
+#notify-content {
+  min-width: 50%;
+  max-width: 90%;
+}
+#notify-title {
+  padding: 4px;
+  color: black;
+  background-color: #eeeeee;
+  font-weight: bold;
+  line-height: 100%;
+  border: 1px solid #c0c0c0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-line;
+}
+#notify-message {
+  padding: 0.5em 1em;
+  color: black;
+  background-color: white;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-line;
+}
+#notify-buttons {
+  text-align: center;
+  margin-top: 0.5em;
+}
+#notify-ok-button {
+  font-family: inherit;
+  font-size: 100%;
+}
+
+/* login dialog */
+#login .title {
+  text-align: center;
+  border-bottom: 1px solid black;
+  padding-bottom: 0px;
+  margin-bottom: 0.3em;
+}
+#login input {
+  font-family: inherit;
+  font-size   : 100%;
+}
+#login input[type="text"] {
+  width: 100%;
+  min-width: 10em;
+}
+#login input[type="password"] {
+  width: 100%;
+  min-width: 10em;
+}
+#login-key-room , #login-key-name, #login-key-pass {
+  padding-right: 0.5em;
+}
+#loginDialog_log_download_pane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  padding: 4px;
+}
+#login-button {
+  font-size: inherit;
+}
+#login .footer {
+  text-align: end;
+  border-top: 1px solid black;
+  margin-top: 0.3em;
+  font-size: smaller;
+}
+
+/* config */
+#config-container , #config-view-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: black;
+  overflow: auto;
+}
+#config , #config-view {
+  min-width: 50%;
+  background-color: #d0d0d0;
+  padding: 1em;
+  border-radius: 1em;
+}
+#config-container button,
+#config-container input,
+#config-container select,
+#config-container textarea,
+#config-view-container button,
+#config-view-container input,
+#config-view-container select,
+#config-view-container textarea
+{
+  font-family : inherit;
+  font-size   : 100%;
+}
+#config-container input[type=checkbox] {
+  transform: scale(1.3);
+}
+#config-view-container input[type=checkbox] {
+  transform: scale(1.5);
+}
+#config h2 , #config-view h2 {
+  font-size: large;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+  /*margin-top: 2em;*/
+}
+#config label , #config-view label {
+  vertical-align: middle;
+}
+.config-singleline {
+  margin-bottom: 0.5em;
+}
+.config-key:after {
+  content: " : ";
+}
+
+
+/* ==================== Split.js ==================== */
+
+.gutter {
+  background-color: #eee;
+
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+  cursor: col-resize;
+}
+
+.gutter.gutter-vertical {
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+  cursor: row-resize;
+}
+
+/* ==================== LigatureSymbols ==================== */
+
+@font-face {
+  font-family: 'LigatureSymbols';
+  src: url('LigatureSymbols.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.lsf {
+  font-family: 'LigatureSymbols';
+  -webkit-text-rendering: optimizeLegibility;
+  -moz-text-rendering: optimizeLegibility;
+  -ms-text-rendering: optimizeLegibility;
+  -o-text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: antialiased;
+  -webkit-font-feature-settings: "liga" 1, "dlig" 1;
+  -moz-font-feature-settings: "liga=1, dlig=1";
+  -ms-font-feature-settings: "liga" 1, "dlig" 1;
+  -o-font-feature-settings: "liga" 1, "dlig" 1;
+  font-feature-settings: "liga" 1, "dlig" 1;
+}
+
+.lsf-icon:before {
+  content:attr(title);
+  margin-right:0.3em;
+  font-size:130%;
+  font-family: 'LigatureSymbols';
+  -webkit-text-rendering: optimizeLegibility;
+  -moz-text-rendering: optimizeLegibility;
+  -ms-text-rendering: optimizeLegibility;
+  -o-text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: antialiased;
+  -webkit-font-feature-settings: "liga" 1, "dlig" 1;
+  -moz-font-feature-settings: "liga=1, dlig=1";
+  -ms-font-feature-settings: "liga" 1, "dlig" 1;
+  -o-font-feature-settings: "liga" 1, "dlig" 1;
+  font-feature-settings: "liga" 1, "dlig" 1;
+}

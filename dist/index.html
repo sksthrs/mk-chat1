@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="mk-chat : 入力状況モニターおよびノート欄つきチャット (chat with input-monitoring, note)">
+  <meta property="og:title" content="mk-chat">
+  <meta property="og:description" content="入力状況モニターおよびノート欄つきチャット (chat with input-monitoring, note)">
+  <meta property="og:image" content="apple-touch-icon.png">
+  <link href="mekiku.css" rel="stylesheet">
+  <link rel="icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <title>mk-chat</title>
+</head>
+<body>
+  <div id="container">
+
+    <div id="pane1" class="h_pane">
+
+      <div id="display-input">
+        <div id="display" class="pane"></div>
+        <div id="display-input-fontsize"></div>
+        <div id="input" class="pane">
+          <input type="text" id="input1" class="inputArea" autocomplete="off">
+        </div>
+      </div>
+
+      <div id="monitor" class="pane">
+        <div id="monitor-title" class="titlebar">Input Monitor</div>
+        <table id="monitorTable">
+          <tr>
+            <td id="monitorHeader1" class="header monitorColumn1">
+              <span class="header-text l10n" data-context="Monitor" id="monitor-header-name">name</span>
+            </td>
+            <td id="monitorHeader2" class="header monitorColumn2">
+              <span class="header-text l10n" data-context="Monitor" id="monitor-header-input">current input window</span>
+            </td>
+          </tr>
+        </table>
+        <span id="monitorFontChecker">字</span>
+      </div><!-- end of monitor pane -->
+
+    </div>
+
+    <div id="pane2" class="h_pane">
+
+      <div id="control" class="pane">
+        <button id="appConfig" class="l10n" data-context="Config">Config</button>
+        <button id="appLogout" class="l10n" data-context="Login">Logout</button>
+        <a id="file-download" download href="data:,hello" class="no-show"></a>
+      </div>
+      <div id="note" class="pane">
+        <div id="note-title" class="titlebar l10n" data-context="Note">Shared Note</div>
+        <div id="note-toolbar" class="toolbar">
+          <!-- <button id="note-edit" class="inlineButton big-font-ui">Edit</button> -->
+        </div>
+        <textarea id="note-text" class="wrap" autocomplete="off" spellcheck="false" wrap="off"></textarea>
+        <div id="note-state">
+          <span id="note-state-text"></span>
+        </div>
+      </div>
+
+      <div id="fkey" class="pane">
+        <div id="fkey-title" class="titlebar">Shortcut</div>
+        <table id="fkey-table">
+          <tr><td class="fkey-label" id="fkey01-label">F1</td><td class="fkey-text"><input type="text" id="fkey01" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey02-label">F2</td><td class="fkey-text"><input type="text" id="fkey02" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey03-label">F3</td><td class="fkey-text"><input type="text" id="fkey03" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey04-label">F4</td><td class="fkey-text"><input type="text" id="fkey04" class="fkey-input"></td></tr>
+          <tr><td class="fkey-label" id="fkey08-label">F8</td><td class="fkey-text"><div id="cfkey08" class="fkey-text-readonly l10n" data-context="Fkey">Parenthesize all</div></td></tr>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="shutter">
+    <div id="shutter_message">
+      <div id="shutter_message_text" class="l10n" data-context="General">Internet Explorer and old version of Microsoft Edge are not supported.</div>
+      <div id="shutter_message_image"><img src="no-ie-and-old-edge.svg" alt="Not for IE and old Edge"></div>
+    </div>
+  </div>
+
+  <div class="dialog" id="notify"><div class="dialog_content" id="notify-content">
+    <div id="notify-title"></div>
+    <div id="notify-message"></div>
+    <div id="notify-buttons">
+      <button id="notify-ok-button">OK</button>
+    </div>
+  </div></div>
+
+  <div id="login" class="dialog open"><div class="dialog_content big_font">
+    <div id="app-title" class="title">
+      <span id="login-title" class="l10n" data-context="General">mk-chat</span>
+      <span id="app-version">beta</span>
+    </div>
+    <table id="loginTable"><tbody>
+      <tr id="loginTable_roomRow">
+        <td id="login-key-room" class="login-keys l10n" data-context="Login">Room</td>
+        <td class="login-values">
+          <input type="text" id="login-input-room" pattern="^[A-Za-z0-9]+$" autocomplete="off" required>
+        </td>
+      </tr>
+      <tr id="loginTable_nameRow">
+        <td id="login-key-name" class="login-keys l10n" data-context="Login">Name</td>
+        <td class="login-values"><input type="text" id="login-input-name" required></td>
+      </tr>
+      <tr id="loginTable_passRow">
+        <td id="login-key-pass" class="login-keys l10n" data-context="Login">Password</td>
+        <td class="login-values"><input type="password" id="login-input-pass" required></td>
+      </tr>
+      <tr id="loginTable_buttonRow" class="single_column">
+        <td colspan="2">
+          <button id="login-button" type="button" class="submit l10n" data-context="Login" disabled>Login</button>
+        </td>
+      </tr>
+    </tbody></table>
+    <div id="app-copyright" class="footer copyright">&copy; mekiku.com 2021</div>
+    <div id="loginDialog_log_download_pane">
+      <button id="loginDialog_log_download" class="l10n big-font-ui" data-context="Config|Misc">Save log</button>
+    </div>
+  </div></div>
+
+  <div id="config-container" class="dialog"><div id="config">
+    <div id="config-main-font-size-text" class="config-key l10n" data-context="Config|General">Font Size</div>
+    <div class="config-singleline">
+      <span id="config-main-text" class="l10n" data-context="Config|Main">Main Display</span>
+      <input id="config_main_font_size" class="w4" type="number" min="6" max="128" required>
+    </div>
+    <div class="config-singleline">
+      <span id="config-monitor-text" class="l10n" data-context="Monitor">Input Monitor</span>
+      <input id="config_monitor_font_size" class="w4" type="number" min="6" max="128" required>
+    </div>
+    <div class="config-singleline">
+      <span id="config-note-text" class="l10n" data-context="Note">Shared Note</span>
+      <input id="config_note_font_size" class="w4" type="number" min="6" max="128" required>
+    </div>
+    <div class="config-singleline">
+      <span id="config-fkey-text" class="l10n" data-context="Fkey">Shortcut</span>
+      <input id="config_fkey_font_size" class="w4" type="number" min="6" max="128" required>
+    </div>
+    <div class="config-singleline">
+      <button id="config-reset" class="l10n" data-context="Menu|Menu">Reset All Settings</button>
+    </div>
+    <div id="config-button-pane" class="single_column">
+      <button id="config-button-ok" class="l10n submit" data-context="General">OK</button>
+      <button id="config-button-cancel" class="l10n cancel" data-context="General">Cancel</button>
+    </div>
+  </div></div>
+
+  <audio src="audio_notify.mp3" id="audio-notify" preload="auto"></audio>
+
+  <script src="https://cdn.webrtc.ecl.ntt.com/skyway-latest.js"></script>
+  <script src="mekiku.js"></script>
+</body>
+</html>
