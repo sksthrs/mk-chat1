@@ -1,16 +1,17 @@
 class TmpConfig {
   // user name
   private static username?:string // cache
+  private static KEY_STORAGE = 'tmp-mkchat1-config-name'
   static getName() : string {
     if (this.username == null) {
-      this.username = localStorage.getItem('tmp-config-name') || ''
+      this.username = localStorage.getItem(this.KEY_STORAGE) || ''
     }
     return this.username
   }
   static setName(name:string) {
     if (name !== this.username) {
       this.username = name
-      localStorage.setItem('tmp-config-name', name)
+      localStorage.setItem(this.KEY_STORAGE, name)
     }
   }
 

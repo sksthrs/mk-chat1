@@ -44,9 +44,10 @@ class App {
   private readonly IS_BROWSER_AUTH = 'browser'
   private audioNotify = document.getElementById("audio-notify") as HTMLAudioElement
   private isActive: boolean = true
+  private readonly KEY_STORAGE = 'config-mkchat1'
 
   constructor() {
-    const localConfig = localStorage.getItem('config')
+    const localConfig = localStorage.getItem(this.KEY_STORAGE)
     if (localConfig != null) {
       Log.w('Info', 'config found in localStorage')
       AppConfig.trySetJSON(localConfig)
@@ -470,7 +471,7 @@ class App {
       this.comm.leaveRoom()
     }
     const config = AppConfig.getJSON()
-    localStorage.setItem('config',config)
+    localStorage.setItem(this.KEY_STORAGE, config)
   }
 
   private setEvents() {
