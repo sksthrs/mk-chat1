@@ -197,6 +197,11 @@ class App {
       const log = this.paneMain.getMainLog().join(Util.getNewLineCode())
       Downloader.start(name, log)
     }
+    this.dialogLogin.onDownloadNote = () => {
+      const name = Util.getIsoModifiedDateTimeString() + "_note.log"
+      const log = this.paneNote.getNote()
+      Downloader.start(name, log)
+    }
 
     this.dialogLogin.onLoginClick = info => {
       this.loginInfo = info
@@ -334,7 +339,8 @@ class App {
     this.updateRoomName('')
     this.paneMonitor.clearMembers()
     const hasMain = this.paneMain.hasMainLog()
-    this.dialogLogin.showDialog(hasMain)
+    const hasNote = this.paneNote.hasNote()
+    this.dialogLogin.showDialog(hasMain, hasNote)
   }
 
   private onSomeoneJoined(id:string) {

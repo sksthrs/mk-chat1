@@ -23,6 +23,10 @@ export class PaneNote implements Pane {
     this.updateState()
   }
 
+  hasNote() : boolean {
+    return this.noteText.value.length > 0
+  }
+
   getNote() : string {
     return this.noteText.value
   }

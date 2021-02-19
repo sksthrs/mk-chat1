@@ -13,6 +13,7 @@ class DialogLogin {
   private buttonLogin = document.getElementById('login-button') as HTMLButtonElement
   private downloadPane = document.getElementById('loginDialog_log_download_pane') as HTMLDivElement
   private buttonDownload = document.getElementById('loginDialog_log_download') as HTMLButtonElement
+  private buttonDownloadNote = document.getElementById('loginDialog_note_download') as HTMLButtonElement
 
   /** Condition for login (set from outside) */
   private loginCondition: number = 0
@@ -24,6 +25,7 @@ class DialogLogin {
 
   onLoginClick: (info:LoginInfo) => void = i => {}
   onDownloadMain: () => void = () => {}
+  onDownloadNote: () => void = () => {}
 
   constructor() {
     this.setEvents()
@@ -41,6 +43,7 @@ class DialogLogin {
     })
 
     this.buttonDownload.addEventListener('click', ev => {this.onDownloadMain()})
+    this.buttonDownloadNote.addEventListener('click', ev => {this.onDownloadNote()})
 
     this.dialogLogin.addEventListener('change', ev => { this.updateState() })
     this.dialogLogin.addEventListener('input', ev => { this.updateState() })
@@ -87,11 +90,16 @@ class DialogLogin {
     this.nameInput.value = name
   }
 
-  showDialog(canGetMain:boolean=false) {
+  showDialog(canGetMain:boolean=false, canGetNote:boolean=false) {
     if (canGetMain === true) {
       UtilDom.displayOn(this.buttonDownload)
     } else {
       UtilDom.displayOff(this.buttonDownload)
+    }
+    if (canGetNote === true) {
+      UtilDom.displayOn(this.buttonDownloadNote)
+    } else {
+      UtilDom.displayOff(this.buttonDownloadNote)
     }
 
     UtilDom.show(this.dialogLogin)
