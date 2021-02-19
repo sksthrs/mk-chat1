@@ -22,11 +22,41 @@ export class PaneMain implements Pane {
     return this.contents.length > 0
   }
 
+  private makeSpan(t:string) : HTMLSpanElement {
+    const item = document.createElement('span')
+    item.textContent = t
+    return item
+  }
+
+  private makeAnchor(url:string, t?:string) : HTMLAnchorElement {
+    const item = document.createElement('a')
+    item.href = url
+    item.textContent = t || url
+    item.rel = "noreferrer noopener"
+    item.target = "_blank"
+    return item
+  }
+
   private makeMessageElement(d:Content) : HTMLElement {
     this.contents.push(d)
     const item = document.createElement('p')
     item.classList.add('message')
-    item.textContent = d.messageBody
+
+    // split message into URL and other, insert them as anchor or span elements.
+    const re = new RegExp("https?://[A-Za-z0-9\\-._~:/?#[\\]@!$&'()*+,;=]+",'g')
+    const src = d.messageBody
+    let result = re.exec(src)
+    let iStart = 0
+    while(result !== null) {
+      if (result.index > iStart) {
+        item.appendChild(this.makeSpan(src.substring(iStart,result.index)))
+      }
+      item.appendChild(this.makeAnchor(result[0]))
+      iStart = re.lastIndex
+      result = re.exec(src)
+    }
+    item.appendChild(this.makeSpan(src.substring(iStart)))
+
     return item
   }
 
