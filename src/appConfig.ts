@@ -99,13 +99,13 @@ export class AppConfig {
   }
 
   // monitor pane
-  monitor_font_size: number = 10;
+  monitor_font_size: number = 14;
 
   // note pane
   note_font_size: number = 14;
 
   // f-keys pane
-  fkey_font_size: number = 12;
+  fkey_font_size: number = 14;
 
   // singleton
 
