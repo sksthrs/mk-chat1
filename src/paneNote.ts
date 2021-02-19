@@ -12,6 +12,7 @@ export class PaneNote implements Pane {
   private readonly titlebar = document.getElementById('note-title') as HTMLDivElement
   private readonly noteText = document.getElementById("note-text") as HTMLTextAreaElement;
   private readonly noteStateText = document.getElementById("note-state-text") as HTMLSpanElement;
+  private lastSenderName:string = ""
 
   onUpdate : (text:string) => void = (t) => {}
 
@@ -22,6 +23,14 @@ export class PaneNote implements Pane {
     this.updateState()
   }
 
+  getNote() : string {
+    return this.noteText.value
+  }
+
+  getLastSender() : string {
+    return this.lastSenderName
+  }
+
   private setEvent() {
     this.noteText.addEventListener('input', ev => {
       this.onUpdate(this.noteText.value ?? '')
@@ -29,13 +38,25 @@ export class PaneNote implements Pane {
     })
   }
 
-  update(data:ContentToSend) {
+  private updateNote(text:string, name:string) {
     const selBegin = this.noteText.selectionStart
     const selEnd = this.noteText.selectionEnd
-    this.noteText.value = data.messageBody
-    this.updateState(data.senderName)
+    this.noteText.value = text
+    this.updateState(name)
+    this.lastSenderName = name
     this.noteText.selectionStart = selBegin
     this.noteText.selectionEnd = selEnd
+  }
+
+  update(data:ContentToSend) {
+    this.updateNote(data.messageBody, data.senderName)
+  }
+
+  updateByResponse(data:ContentToSend) {
+    const text = data.messageBody
+    const ix = text.indexOf('\n')
+    if (ix<0 || ix>=(text.length-1)) return
+    this.updateNote(text.substring(ix+1), text.substring(0,ix))
   }
 
   private updateState(str?:string) {

@@ -351,13 +351,16 @@ class App {
     let ifUpdate = true
 
     if (data.messageType === ContentType.LOGIN) {
-      const d = new ContentToSendClass(TmpConfig.getName(), ContentType.RESPONSE, "")
+      const note = this.paneNote.getNote()
+      let name = this.paneNote.getLastSender()
+      if (name.length < 1) { name = TmpConfig.getName() }
+      const d = new ContentToSendClass(TmpConfig.getName(), ContentType.RESPONSE, name+'\n'+note)
       this.comm.send_room(d)
       if (!this.isActive) { this.audioNotify.play() }
     }
 
     if (data.messageType === ContentType.RESPONSE) {
-      // nop
+      this.paneNote.updateByResponse(data)
     }
 
     if (data.messageType === ContentType.DISPLAY) {
@@ -373,7 +376,6 @@ class App {
     }
 
     if (data.messageType === ContentType.NOTE) {
-      Log.w('info',`received note : ${data.messageBody}`)
       this.paneNote.update(data)
     }
 
