@@ -92,7 +92,7 @@ label {
   color: black;
 }
 .dialog input[type="text"]:invalid {
-  background-color: #FFA0A0;
+  background-color: #e0e0f0;
   color: black;
 }
 
@@ -408,6 +408,10 @@ td.fkey-text {
 }
 
 /* login dialog */
+#login-contents {
+  background-color: #adf;
+  border-color: #66d;
+}
 #login .title {
   text-align: center;
   border-bottom: 1px solid black;
