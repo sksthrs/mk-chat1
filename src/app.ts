@@ -59,7 +59,7 @@ class App {
     window.addEventListener('beforeunload', (ev) => { this.onBeforeUnload(ev) })
     window.addEventListener('unload', (ev) => { this.onUnload(ev) })
     window.addEventListener('focus', ev => { this.isActive = true })
-    window.addEventListener('blue', ev => { this.isActive = false })
+    window.addEventListener('blur', ev => { this.isActive = false })
 
     UtilDom.makeDialogsRespondToKey()
 
@@ -353,6 +353,7 @@ class App {
     if (data.messageType === ContentType.LOGIN) {
       const d = new ContentToSendClass(TmpConfig.getName(), ContentType.RESPONSE, "")
       this.comm.send_room(d)
+      if (!this.isActive) { this.audioNotify.play() }
     }
 
     if (data.messageType === ContentType.RESPONSE) {
@@ -364,6 +365,7 @@ class App {
       this.paneMonitor.updateMember(member, data)
       this.paneMain.addNewItem(data)
       ifUpdate = false
+      if (!this.isActive) { this.audioNotify.play() }
     }
 
     if (data.messageType === ContentType.MONITOR) {
@@ -377,12 +379,9 @@ class App {
 
     if (ContentType.LOGOFF in data) {
       this.paneMonitor.deleteMember(data.senderID)
+      if (!this.isActive) { this.audioNotify.play() }
     } else if (ifUpdate) {
       this.paneMonitor.updateMember(member, data)
-    }
-
-    if (!this.isActive) {
-      this.audioNotify.play()
     }
   }
 
