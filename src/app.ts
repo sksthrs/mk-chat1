@@ -108,6 +108,10 @@ class App {
         const debuglevel = json.debug_level as number
         TmpConfig.setDebugLevel(debuglevel)
       }
+      if ("chat_type" in json) {
+        const chatType = json.chat_type as string
+        TmpConfig.setChatType(chatType)
+      }
     })
 
     this.paneMain = new PaneMain()
@@ -134,7 +138,11 @@ class App {
   // ==================== Sending ====================
 
   private sendMain(text:string) {
-    const d = new ContentToSendClass(TmpConfig.getName(), ContentType.DISPLAY, text)
+    const name = TmpConfig.getName()
+    if (TmpConfig.getChatType().indexOf('a') >= 0) {
+      text = name + T.t(' : ','Chat') + text
+    }
+    const d = new ContentToSendClass(name, ContentType.DISPLAY, text)
     this.comm.send_room(d)
     const dR = ContentClass.fromSendData(this.id, d)
     this.paneMain.addNewItem(dR)

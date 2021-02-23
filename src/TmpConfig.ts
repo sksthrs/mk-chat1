@@ -15,13 +15,13 @@ class TmpConfig {
     }
   }
 
-  // user member-type
-  private static memberType:string = '';
-  static getMemberType() : string {
-    return this.memberType
+  // chat type
+  private static chatType:string = '';
+  static getChatType() : string {
+    return this.chatType
   }
-  static setMemberType(memberType:string) {
-    this.memberType = memberType
+  static setChatType(chatType:string) {
+    this.chatType = chatType
   }
 
   // API key
