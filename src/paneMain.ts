@@ -43,7 +43,7 @@ export class PaneMain implements Pane {
     item.classList.add('message')
 
     // split message into URL and other, insert them as anchor or span elements.
-    const re = new RegExp("https?://[A-Za-z0-9\\-._~:/?#[\\]@!$&'()*+,;=]+",'g')
+    const re = new RegExp("https?://[A-Za-z0-9\\-._~:/?#[\\]@!$&'()*+,;=%]+",'g')
     const src = d.messageBody
     let result = re.exec(src)
     let iStart = 0
