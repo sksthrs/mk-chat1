@@ -64,11 +64,14 @@ export class PaneMain implements Pane {
     // If this is less than zero, display pane floats
     const scrollOffsetBeforeAdd = this.pane.scrollTop + this.pane.clientHeight - this.pane.scrollHeight
     this.pane.appendChild(item)
-    // Scroll to bottom if it was bottom before appendChild
-    // '-5' is not concrete value, but '0' leads to 'no scroll' bug (maybe because of less-than-one-pixel difference)
-    if (scrollOffsetBeforeAdd >= -5) {
-      this.pane.scrollTop = this.pane.scrollHeight - this.pane.clientHeight
+    // Scroll to bottom if not-scrolled-pane-height-or-more before appendChild
+    if (scrollOffsetBeforeAdd >= -this.pane.clientHeight) {
+      this.goBottom()
     }
+  }
+
+  goBottom() {
+    this.pane.scrollTop = this.pane.scrollHeight - this.pane.clientHeight
   }
 
   addMyNewItem(d:Content) {
