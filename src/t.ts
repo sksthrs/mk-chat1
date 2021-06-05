@@ -212,6 +212,8 @@ export class T {
         "Communication error." : "通信エラーです。",
         "Detail" : "詳細",
         "Internet Explorer and old version of Microsoft Edge are not supported." : "Internet Explorerおよび旧版のMicrosoft Edgeでは利用できません。",
+        "Note" : "メモ表示",
+        "Back" : "戻る",
       },
       "Input" : {
         "Input Window" : "入力ウインドウ",
@@ -240,6 +242,7 @@ export class T {
         "name" : "名前",
         "current input window" : "入力中の内容",
         "connect" : "接続",
+        "(no attendance)" : "（参加者なし）",
       },
       "PFT" : {
         "PFT (Pre-Formatted Text)" : "前ロール",
@@ -388,6 +391,8 @@ export class T {
         // "Communication error." : "",
         // "Detail" : "",
         // "Internet Explorer and old version of Microsoft Edge are not supported." : "",
+        //"Note" : "",
+        //"Back" : "",
       },
       "Input" : {
         "Input Window" : "หน้าต่างอินพุท",
@@ -416,6 +421,7 @@ export class T {
         "name" : "ชื่อ",
         "current input window" : "หน้าต่างที่กำลังอินพุท",
         "connect" : "เชื่อมต่อ",
+        //"(no attendance)" : "",
       },
       "PFT" : {
         "PFT (Pre-Formatted Text)" : "พรีฟอร์แม็ทเท็กซ์",

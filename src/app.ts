@@ -20,11 +20,16 @@ import Split from "split.js"
 import DialogNotify from "./dialogNotify";
 import { DialogConfig } from "./dialogConfig";
 import { PaneNote } from "./paneNote";
+import { AppDisplayStyle } from "./appDisplay";
+import Pane1 from "./pane1";
+import Pane2 from "./pane2";
 
 class App {
   private comm: MekikuComm
   private appControl: PaneControl
   private dialogLogin: DialogLogin
+  private pane1: Pane1
+  private pane2: Pane2
   private paneInput: PaneInput
   private paneFkey: PaneFkey
   private paneMonitor: PaneMonitor
@@ -45,6 +50,8 @@ class App {
   private audioNotify = document.getElementById("audio-notify") as HTMLAudioElement
   private isActive: boolean = true
   private readonly KEY_STORAGE = 'config-mkchat1'
+  private smallScreenMediaQuery?: MediaQueryList
+  private readonly MEDIA_QUERY_SMALL_SCREEN = 'screen and (max-width: 519px)'
 
   constructor() {
     const localConfig = localStorage.getItem(this.KEY_STORAGE)
@@ -67,6 +74,9 @@ class App {
 
     const handlers = this.makeCommEventHandlers()
     this.comm = new MekikuComm(handlers)
+
+    this.pane1 = new Pane1()
+    this.pane2 = new Pane2()
 
     this.appControl = new PaneControl()
     this.setAppControlEvents()
@@ -139,7 +149,7 @@ class App {
 
   private sendMain(text:string) {
     const name = TmpConfig.getName()
-    if (TmpConfig.getChatType().indexOf('a') >= 0) {
+    if (TmpConfig.useAutoNameOnSend()) {
       text = name + T.t(' : ','Chat') + text
     }
     const d = new ContentToSendClass(name, ContentType.DISPLAY, text)
@@ -196,6 +206,16 @@ class App {
       const d = new ContentToSendClass(TmpConfig.getName(), ContentType.LOGOFF, "")
       this.comm.send_room(d)
       this.comm.leaveRoom()
+    }
+    this.appControl.onShowNote = () => {
+      if (this.smallScreenMediaQuery?.matches === true) {
+        this.setSplits("OnlySub")
+      }
+    }
+    this.appControl.onBackToChat = () => {
+      if (this.smallScreenMediaQuery?.matches === true) {
+        this.setSplits("OnlyChat")
+      }
     }
   }
   
@@ -267,7 +287,6 @@ class App {
   // ==================== Configurations ====================
 
   private setSubtitlerStyle() {
-    this.setSplits()
     this.paneInput.focus()
   }
 
@@ -279,14 +298,52 @@ class App {
     this.paneFkey.updateConfig()
   }
 
-  private setSplits() {
+  private manageScreenWidth(mql?:MediaQueryList): void {
+    if (mql == null) {
+      TmpConfig.setIfNarrow(false)
+      this.setSplits("Full")
+    } else if (mql.matches) {
+      // On narrow screen : limited functionality
+      TmpConfig.setIfNarrow(true)
+      this.setSplits("OnlyChat")
+      this.paneInput.setupAsNarrowScreen()
+    } else {
+      // On wide (not narrow) screen : full functionality
+      TmpConfig.setIfNarrow(false)
+      this.setSplits("Full")
+    }
+  }
+
+  private setSplits(style: AppDisplayStyle) {
     const gutterWidth = 6
+
+    const width1 = ((s: AppDisplayStyle) => {
+      switch (s) {
+        case 'Full': return AppConfig.data.misc_pane1_width
+        case 'OnlyChat': return 100
+        case 'OnlySub': return 0
+        default: throw new Error('Impossible style!')
+      }
+    })(style)
+
+    const width2 = ((s: AppDisplayStyle) => {
+      switch (s) {
+        case 'Full': return AppConfig.data.misc_pane2_width
+        case 'OnlyChat': return 0
+        case 'OnlySub': return 100
+        default: throw new Error('Impossible style!')
+      }
+    })(style)
+
+    if (width1 > 0) { this.pane1.show() }
+    else { this.pane1.hide() }
+    if (width2 > 0) { this.pane2.show() }
+    else { this.pane2.hide() }
+
     if (this.splitContainer == null) {
-      this.splitContainer = Split(['#pane1','#pane2'],{
-        sizes: [
-          AppConfig.data.misc_pane1_width, 
-          AppConfig.data.misc_pane2_width, 
-        ],
+      this.splitContainer = Split(['#pane1', '#pane2'], {
+        sizes: [width1, width2],
+        minSize: 0,
         direction: 'horizontal',
         gutterSize: gutterWidth,
         onDragEnd: sizes => {
@@ -295,18 +352,31 @@ class App {
         },
       })
     } else {
-      this.splitContainer.setSizes([
-        AppConfig.data.misc_pane1_width, 
-        AppConfig.data.misc_pane2_width, 
-      ])
+      this.splitContainer.setSizes([width1, width2])
     }
 
+    const heightDisplay = ((s: AppDisplayStyle) => {
+      switch (s) {
+        case 'Full': return AppConfig.data.misc_display_input_height
+        case 'OnlyChat': return 100
+        case 'OnlySub': return 100
+        default: throw new Error('Impossible style!')
+      }
+    })(style)
+
+    const heightMonitor = ((s: AppDisplayStyle) => {
+      switch (s) {
+        case 'Full': return AppConfig.data.misc_monitor_height
+        case 'OnlyChat': return 0
+        case 'OnlySub': return 0
+        default: throw new Error('Impossible style!')
+      }
+    })(style)
+
     if (this.splitDisplayMonitor == null) {
-      this.splitDisplayMonitor = Split(['#display-input', '#monitor'],{
-        sizes: [
-          AppConfig.data.misc_display_input_height,
-          AppConfig.data.misc_monitor_height,
-        ],
+      this.splitDisplayMonitor = Split(['#display-input', '#monitor'], {
+        sizes: [heightDisplay, heightMonitor],
+        minSize: 0,
         direction: 'vertical',
         gutterSize: gutterWidth,
         onDragEnd: sizes => {
@@ -315,10 +385,7 @@ class App {
         },
       })
     } else {
-      this.splitDisplayMonitor.setSizes([
-        AppConfig.data.misc_display_input_height,
-        AppConfig.data.misc_monitor_height,
-      ])
+      this.splitDisplayMonitor.setSizes([heightDisplay, heightMonitor])
     }
   }
 
@@ -489,6 +556,12 @@ class App {
   }
 
   private setEvents() {
+    this.smallScreenMediaQuery = window.matchMedia(this.MEDIA_QUERY_SMALL_SCREEN)
+    this.smallScreenMediaQuery.addEventListener("change", (ev) => {
+      this.manageScreenWidth(this.smallScreenMediaQuery)
+    })
+    this.manageScreenWidth(this.smallScreenMediaQuery) // initial setting
+
     document.addEventListener('visibilitychange', ev => {
       if (document.hidden) {
       }

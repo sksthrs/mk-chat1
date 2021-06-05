@@ -230,6 +230,26 @@ label {
   align-items: stretch;
 }
 
+#controlOnChat {
+  display: none;
+}
+#member-list {
+  display: none;
+}
+@media screen and (max-width: 519px) {
+  #controlOnChat {
+    display: block;
+    background-color: black;
+  }
+  #member-list {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: white;
+    background-color: #000055;
+  }
+}
+
 /* main display */
 #display {
   flex-grow: 1;
@@ -316,6 +336,15 @@ table#monitorTable td {
   justify-content: flex-end;
   align-items: stretch;
   background-color: black;
+}
+
+#appBackToChat {
+  display: none;
+}
+@media screen and (max-width: 519px) {
+  #appBackToChat {
+    display: initial;
+  }
 }
 
 /* note */

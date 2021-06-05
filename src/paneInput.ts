@@ -3,6 +3,7 @@ import { Pane } from "./pane"
 import { UtilDom } from "./utilDom"
 import { T } from "./t"
 import { Util } from "./util"
+import TmpConfig from "./TmpConfig"
 
 export class PaneInput implements Pane {
   getName() { return "PaneInput" }
@@ -49,13 +50,15 @@ export class PaneInput implements Pane {
       // if (UtilDom.isCommandOrControlPressed(ev) === true) {
       //   this.replacePart(el, "\n")
       // } else {
-        this.onEnter(el.value)
-        el.value = ""
+        if (el.value !== '' && el.value !== this.makeInitialPhrase()) {
+          this.onEnter(el.value)
+          this.clearInput(el)
+        }
       // }
       ev.preventDefault()
       ev.stopImmediatePropagation()
     } else if (ev.keyCode === UtilDom.KEY_ESC) {
-      el.value = ""
+      this.clearInput(el)
       ev.preventDefault()
       ev.stopImmediatePropagation()
     } else {
@@ -80,6 +83,24 @@ export class PaneInput implements Pane {
       }
     }
     this.onInput(el.value)
+  }
+
+  private clearInput(el:HTMLInputElement) {
+    if (TmpConfig.getIfNarrow() && (TmpConfig.useAutoNameOnSend() !== true)) {
+      el.value = this.makeInitialPhrase()
+    } else {
+      el.value = ''
+    }
+  }
+
+  private makeInitialPhrase(): string {
+    return TmpConfig.getName() + T.t(' : ','Chat')
+  }
+
+  setupAsNarrowScreen() {
+    if (this.input1Vjs.value === '') {
+      this.clearInput(this.input1Vjs)
+    }
   }
 
   private configToScreen() {

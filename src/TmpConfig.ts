@@ -16,12 +16,25 @@ class TmpConfig {
   }
 
   // chat type
+  static readonly SET_NAME_AUTOMATICALLY = 'a'
   private static chatType:string = '';
   static getChatType() : string {
     return this.chatType
   }
   static setChatType(chatType:string) {
     this.chatType = chatType
+  }
+  static useAutoNameOnSend() : boolean {
+    return this.chatType.indexOf(this.SET_NAME_AUTOMATICALLY) >= 0
+  }
+
+  // narrow screen or not
+  private static ifNarrow:boolean = false
+  static getIfNarrow() : boolean {
+    return this.ifNarrow
+  }
+  static setIfNarrow(ifNarrow:boolean) {
+    this.ifNarrow = ifNarrow
   }
 
   // API key

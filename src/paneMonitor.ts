@@ -21,6 +21,8 @@ export class PaneMonitor implements Pane {
   private readonly header1 = document.getElementById("monitorHeader1") as HTMLTableDataCellElement
   private readonly header2 = document.getElementById("monitorHeader2") as HTMLTableDataCellElement
 
+  private readonly memberList = document.getElementById('member-list') as HTMLDivElement
+
   private readonly IX_NAME = 0
   private readonly IX_INPUT = 1
   private readonly N_COLUMNS = 2
@@ -38,6 +40,7 @@ export class PaneMonitor implements Pane {
     let ix = result.v1
     if (ix < 0) {
       this.addRow()
+      this.updateMemberList()
       ix = MemberManager.data.getCount() - 1
       if (data.messageType === ContentType.LOGIN) {
         this.onMemberNewJoined(member)
@@ -50,6 +53,7 @@ export class PaneMonitor implements Pane {
     const result = MemberManager.data.unregist(id)
     if (result.v1 >= 0) {
       this.removeRow(result.v1 + 1)
+      this.updateMemberList()
       if (result.v2 != null) {
         this.onMemberLeft(result.v2)
       }
@@ -59,6 +63,16 @@ export class PaneMonitor implements Pane {
   clearMembers() {
     MemberManager.data.clear()
     this.clearRows()
+    this.updateMemberList()
+  }
+
+  private updateMemberList() {
+    if (MemberManager.data.getCount() < 1) {
+      this.memberList.textContent = T.t('(no attendance)', 'Monitor')
+    } else {
+      const members = MemberManager.data.enumerateMembers()
+      this.memberList.textContent = members.join(' ')
+    }
   }
 
   private configToScreen() {

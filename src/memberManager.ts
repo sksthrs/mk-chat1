@@ -62,6 +62,10 @@ export class MemberManager {
     return {...found}
   }
 
+  enumerateMembers() : Array<string> {
+    return this.members.map(m => m.name ?? '?')
+  }
+
   /**
    * Update members information with new data
    * @param member incoming data
