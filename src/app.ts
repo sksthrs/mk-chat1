@@ -213,12 +213,14 @@ class App {
     }
     this.appControl.onShowNote = () => {
       if (this.smallScreenMediaQuery?.matches === true) {
-        this.setSplits("OnlySub")
+        TmpConfig.setDisplayStyle('OnlySub')
+        this.setSplits()
       }
     }
     this.appControl.onBackToChat = () => {
       if (this.smallScreenMediaQuery?.matches === true) {
-        this.setSplits("OnlyChat")
+        TmpConfig.setDisplayStyle('OnlyChat')
+        this.setSplits()
       }
     }
   }
@@ -306,45 +308,38 @@ class App {
 
   private manageScreenWidth(mql?:MediaQueryList): void {
     if (mql == null) {
-      TmpConfig.setIfNarrow(false)
-      this.setSplits("Full")
+      TmpConfig.setDisplayStyle('Full')
     } else if (mql.matches) {
       // On narrow screen : limited functionality
-      TmpConfig.setIfNarrow(true)
-      this.setSplits("OnlyChat")
+      TmpConfig.setDisplayStyle('OnlyChat')
       this.paneInput.setupAsNarrowScreen()
     } else {
       // On wide (not narrow) screen : full functionality
-      TmpConfig.setIfNarrow(false)
-      this.setSplits("Full")
+      TmpConfig.setDisplayStyle('Full')
+    }
+    this.setSplits()
+  }
+
+  private selectWidths(): Array<number> {
+    switch(TmpConfig.getDisplayStyle()) {
+      case 'Full': return [AppConfig.data.misc_pane1_width, AppConfig.data.misc_pane2_width]
+      case 'OnlyChat': return [100, 0]
+      case 'OnlySub': return [0, 100]
     }
   }
 
-  private setSplits(style: AppDisplayStyle) {
+  private selectHeights(): Array<number> {
+    return TmpConfig.getIfNarrow() 
+      ? [100, 0] 
+      : [AppConfig.data.misc_display_input_height, AppConfig.data.misc_monitor_height]
+  }
+
+  private setSplits() {
     const gutterWidth = 6
 
-    const width1 = ((s: AppDisplayStyle) => {
-      switch (s) {
-        case 'Full': return AppConfig.data.misc_pane1_width
-        case 'OnlyChat': return 100
-        case 'OnlySub': return 0
-        default: throw new Error('Impossible style!')
-      }
-    })(style)
-
-    const width2 = ((s: AppDisplayStyle) => {
-      switch (s) {
-        case 'Full': return AppConfig.data.misc_pane2_width
-        case 'OnlyChat': return 0
-        case 'OnlySub': return 100
-        default: throw new Error('Impossible style!')
-      }
-    })(style)
-
-    if (width1 > 0) { this.pane1.show() }
-    else { this.pane1.hide() }
-    if (width2 > 0) { this.pane2.show() }
-    else { this.pane2.hide() }
+    const [width1, width2] = this.selectWidths()
+    if (width1 > 0) { this.pane1.show() } else { this.pane1.hide() }
+    if (width2 > 0) { this.pane2.show() } else { this.pane2.hide() }
 
     if (this.splitContainer == null) {
       this.splitContainer = Split(['#pane1', '#pane2'], {
@@ -353,45 +348,37 @@ class App {
         direction: 'horizontal',
         gutterSize: gutterWidth,
         onDragEnd: sizes => {
-          AppConfig.data.misc_pane1_width = sizes[0]
-          AppConfig.data.misc_pane2_width = sizes[1]
+          if (TmpConfig.getIfNarrow() === true) {
+            this.splitContainer?.setSizes(this.selectWidths())
+          } else {
+            AppConfig.data.misc_pane1_width = sizes[0]
+            AppConfig.data.misc_pane2_width = sizes[1]
+          }
         },
       })
     } else {
       this.splitContainer.setSizes([width1, width2])
     }
 
-    const heightDisplay = ((s: AppDisplayStyle) => {
-      switch (s) {
-        case 'Full': return AppConfig.data.misc_display_input_height
-        case 'OnlyChat': return 100
-        case 'OnlySub': return 100
-        default: throw new Error('Impossible style!')
-      }
-    })(style)
-
-    const heightMonitor = ((s: AppDisplayStyle) => {
-      switch (s) {
-        case 'Full': return AppConfig.data.misc_monitor_height
-        case 'OnlyChat': return 0
-        case 'OnlySub': return 0
-        default: throw new Error('Impossible style!')
-      }
-    })(style)
+    const [height1,height2] = this.selectHeights()
 
     if (this.splitDisplayMonitor == null) {
       this.splitDisplayMonitor = Split(['#display-input', '#monitor'], {
-        sizes: [heightDisplay, heightMonitor],
+        sizes: [height1, height2],
         minSize: 0,
         direction: 'vertical',
         gutterSize: gutterWidth,
         onDragEnd: sizes => {
-          AppConfig.data.misc_display_input_height = sizes[0]
-          AppConfig.data.misc_monitor_height = sizes[1]
+          if (TmpConfig.getIfNarrow()) {
+            this.splitDisplayMonitor?.setSizes([100,0])
+          } else {
+            AppConfig.data.misc_display_input_height = sizes[0]
+            AppConfig.data.misc_monitor_height = sizes[1]
+          }
         },
       })
     } else {
-      this.splitDisplayMonitor.setSizes([heightDisplay, heightMonitor])
+      this.splitDisplayMonitor.setSizes([height1, height2])
     }
   }
 

@@ -1,3 +1,5 @@
+import { AppDisplayStyle } from "./appDisplay"
+
 class TmpConfig {
   // user name
   private static username?:string // cache
@@ -28,13 +30,16 @@ class TmpConfig {
     return this.chatType.indexOf(this.SET_NAME_AUTOMATICALLY) >= 0
   }
 
-  // narrow screen or not
-  private static ifNarrow:boolean = false
-  static getIfNarrow() : boolean {
-    return this.ifNarrow
+  // display style
+  private static displayStyle: AppDisplayStyle = 'Full'
+  static getDisplayStyle(): AppDisplayStyle {
+    return this.displayStyle
   }
-  static setIfNarrow(ifNarrow:boolean) {
-    this.ifNarrow = ifNarrow
+  static setDisplayStyle(style:AppDisplayStyle) {
+    this.displayStyle = style
+  }
+  static getIfNarrow() : boolean {
+    return this.displayStyle !== 'Full'
   }
 
   // API key

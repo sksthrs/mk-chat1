@@ -213,7 +213,7 @@ export class T {
         "Detail" : "詳細",
         "Internet Explorer and old version of Microsoft Edge are not supported." : "Internet Explorerおよび旧版のMicrosoft Edgeでは利用できません。",
         "Note" : "メモ表示",
-        "Back" : "戻る",
+        "Chat" : "チャット表示",
       },
       "Input" : {
         "Input Window" : "入力ウインドウ",
