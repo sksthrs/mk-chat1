@@ -90,8 +90,8 @@ class MekikuComm {
    */
   open(key: string, option?:MekikuCommOpenOption) {
     if (this.peer?.open === true) {
-      // Log.w('Info',`comm.open : old peer(id=${this.peer.id}) remains. disconnecting...`)
-      this.peer.disconnect()
+      // Log.w('Info',`comm.open : old peer(id=${this.peer.id}) remains. destroying...`)
+      this.peer.destroy()
     }
     this.openOption = { ...new MekikuCommOpenOptionClass(), ...option }
     const opt = {
@@ -128,7 +128,6 @@ class MekikuComm {
       if (m === 'sfu' || m === 'mesh') return m
       return 'sfu'
     })(mode)
-    Log.w('Info',`mode=${modeConnection}`)
     const roomName = await this.makeRoomName(info.room, info.pass)
     const r = this.peer.joinRoom(roomName, {
       mode: modeConnection
@@ -190,9 +189,6 @@ class MekikuComm {
     p.on('connection', conn => {
       // Log.w('Info',`peer connected from ${JSON.stringify(conn)}`)
     })
-    p.on('disconnected', id => {
-      // Log.w('Info',`peer disconnected id=${id}`)
-    })
     p.on('error', err => {
       Log.w('Error',`peer error (${err.type}) <${err.message}>`)
       this.onPeerError(err)
@@ -224,7 +220,7 @@ class MekikuComm {
       // Log.w('Info',`room closed`)
       delete this.room
       delete this.info
-      this.peer?.disconnect()
+      this.peer?.destroy()
       this.onLeftRoom()
     })
   }
