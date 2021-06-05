@@ -122,6 +122,10 @@ class App {
         const chatType = json.chat_type as string
         TmpConfig.setChatType(chatType)
       }
+      if ("room_connection_type" in json) {
+        const connectionType = json.room_connection_type as string
+        TmpConfig.setRoomConnectionType(connectionType)
+      }
     })
 
     this.paneMain = new PaneMain()
@@ -242,7 +246,7 @@ class App {
         TmpConfig.getApiKey(),
         {
           handleOpen: id => {
-            this.comm.joinRoom(login_info)
+            this.comm.joinRoom(login_info, TmpConfig.getRoomConnectionType())
             .then(() => {})
             .catch(error => {})
           },

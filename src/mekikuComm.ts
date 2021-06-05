@@ -124,9 +124,14 @@ class MekikuComm {
       throw new Error('Illegal room name')
     }
 
-    var roomName = await this.makeRoomName(info.room, info.pass)
+    const modeConnection = ((m:string) => {
+      if (m === 'sfu' || m === 'mesh') return m
+      return 'sfu'
+    })(mode)
+    Log.w('Info',`mode=${modeConnection}`)
+    const roomName = await this.makeRoomName(info.room, info.pass)
     const r = this.peer.joinRoom(roomName, {
-      mode: mode
+      mode: modeConnection
     })
     if (r == null) {
       Log.w('Error','joinRoom failed.')

@@ -53,6 +53,15 @@ class TmpConfig {
   static setDebugLevel(level:number) {
     this.debugLevel = level
   }
+
+  private static roomConnectionType:string = "sfu"
+  static getRoomConnectionType() : string {
+    return this.roomConnectionType
+  }
+  static setRoomConnectionType(connectionType:string) {
+    if (connectionType !== 'sfu' && connectionType !== 'mesh') return
+    this.roomConnectionType = connectionType
+  }
 }
 
 export default TmpConfig
