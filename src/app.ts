@@ -256,6 +256,7 @@ class App {
       this.updateRoomName(info.room)
       this.paneMonitor.clearMembers()
       this.paneMain.goBottom()
+      this.paneInput.clearAllInput()
       this.setSubtitlerStyle()
     }
   }

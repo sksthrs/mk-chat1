@@ -85,6 +85,10 @@ export class PaneInput implements Pane {
     this.onInput(el.value)
   }
 
+  clearAllInput() {
+    this.clearInput(this.input1Vjs)
+  }
+
   private clearInput(el:HTMLInputElement) {
     if (TmpConfig.getIfNarrow() && (TmpConfig.useAutoNameOnSend() !== true)) {
       el.value = this.makeInitialPhrase()
